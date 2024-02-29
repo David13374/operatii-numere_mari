@@ -22,6 +22,14 @@ public:
 		this->s = s;
 		transform(s);
 	}
+	void inser(int nr)
+	{
+		while (nr)
+		{
+			v.insert(v.begin(), nr % 10);
+			nr /= 10;
+		}
+	}
 	void transform(string s)
 	{
 		while (s.size())
@@ -29,7 +37,6 @@ public:
 			v.insert(v.begin(), s[s.size()-1]-'0');
 			s.pop_back();
 		}
-		//cou();
 	}
 	void transform(vector<short> v)
 	{
@@ -37,40 +44,31 @@ public:
 		{
 			s.push_back(i + '0');
 		}
-		//cou();
 	}
-	void cou()
+	mare operator+(const mare& obj)
 	{
-		for (auto i : v)
-			cout << i;
-		cout << endl;
-		for (auto i : s)
-			cout << i;
-		cout << endl;
-	}
-	mare operator+(const mare& obji)
-	{
-		mare obj = obji;
-		while (v.size() > obj.v.size())
-			obj.v.insert(obj.v.begin(), 0);
-		while (obj.v.size() < v.size())
+		vector<short> v1 = obj.v;
+		vector<short> v = this->v;
+		while (v1.size() > v.size())
 			v.insert(v.begin(), 0);
-		vector<short> res(v.size());
+		while (v1.size() < v.size())
+			v1.insert(v1.begin(), 0);
+		vector<short> res(v.size(), 0);
 		for (int i = v.size() - 1; i >= 0; i--)
 		{
-			res[i] = v[i] + obj.v[i];
-			if (res[i] >= 10 && i > 0)
+			res[i] = res[i] + v[i] + v1[i];
+			if (res[i] >= 10 and i > 0)
 			{
-				res[i - 1]++;
 				res[i] -= 10;
+				res[i - 1]++;
 			}
 		}
-		if (res[0]>=10)
-		{
-			res[0] -= 10;
-			res.insert(res.begin(), 1);
-		}
-		return res;
+		if (res[0] >= 10)
+			res.insert(res.begin(), 1), res[1] -= 10;
+
+		mare resi;
+		resi.v = res;
+		return resi;
 	}
 	mare operator-(const mare& obji)
 	{
@@ -81,7 +79,7 @@ public:
 			v.insert(v.begin(), 0);
 		vector<short> res = v;
 		if (maimare(v, obj.v))
-		{  
+		{
 			for (int i = v.size() - 1; i >= 0; i--)
 			{
 				res[i] -= obj.v[i];
@@ -89,6 +87,8 @@ public:
 					res[i] += 10, res[i - 1] -= 1;
 			}
 		}
+		else
+			cout << "esti prost e negativ" << endl;
 		while (res.size() > 1 && res[res.size() - 1] == 0)
 			res.pop_back();
 		return res;
